@@ -4,6 +4,7 @@ import numpy as np
 import pickle
 import flasgger
 from flasgger import Swagger
+import warnings
 
 app = Flask(__name__)
 Swagger(app)
@@ -17,6 +18,14 @@ SVM = pickle.load(svm_in)
 rf_in = open('RF.pkl', 'rb')
 RF = pickle.load(rf_in)
 
+model_in = open('model.pkl', 'rb')
+model = pickle.load(model_in)
+
+
+def load_model(modelfile):
+    loaded_model = pickle.load(open(modelfile, 'rb'))
+    return loaded_model
+
 
 @app.route('/')
 def welcome():
@@ -25,13 +34,13 @@ def welcome():
 
 @app.route('/predict', methods=['GET'])
 def predic_note_authenticattion():
-    """Authenticating Bank Notes
+    """Plant Recommendation
     ---
     parameters:
-        - name: model
-          in: query
-          type: string
-          require: true
+        # - name: model
+        #   in: query
+        #   type: string
+        #   require: true
         - name: n
           in: query
           type: number
@@ -65,7 +74,7 @@ def predic_note_authenticattion():
               description: the output values
     """
 
-    model = request.args.get('model')
+    # model = request.args.get('model')
     n = request.args.get('n')
     p = request.args.get('p')
     k = request.args.get('k')
@@ -77,14 +86,20 @@ def predic_note_authenticattion():
     sample = [n, p, k, temperature, humidity, ph, rainfall]
     single_sample = np.array(sample).reshape(1, -1)
 
-    if model == 'dt':
-        prediction = DecisionTree.predict(single_sample)
-    elif model == 'svm':
-        prediction = SVM.predict(single_sample)
-    elif model == 'rf':
-        prediction = RF.predict(single_sample)
-    else:
-        prediction = ['No models found']
+    # if model == 'dt':
+    #     prediction = DecisionTree.predict(single_sample)
+    # elif model == 'svm':
+    #     prediction = SVM.predict(single_sample)
+    # elif model == 'rf':
+    #     prediction = RF.predict(single_sample)
+    # elif model == 'model':
+    #     loaded_model = load_model('model.pkl')
+    #     prediction = loaded_model.predict(single_sample)
+    # else:
+    #     prediction = ['No models found']
+
+    loaded_model = load_model('model.pkl')
+    prediction = loaded_model.predict(single_sample)
 
     pred = {
         'crop': prediction[0]
@@ -92,4 +107,6 @@ def predic_note_authenticattion():
     return pred
 
 
-app.run(host='0.0.0.0', port=5000)
+if __name__ == '__main__':
+    from waitress import serve
+    serve(app, host='0.0.0.0', port=8080)

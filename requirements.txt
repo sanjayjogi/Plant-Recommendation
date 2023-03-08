@@ -3,3 +3,4 @@ pandas
 pickle
 flask
 flasgger
+waitress
