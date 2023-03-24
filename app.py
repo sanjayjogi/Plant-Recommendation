@@ -1,11 +1,11 @@
-from flask import Flask, request, Markup
+from flask import Flask, request, Markup, abort
 import pandas as pd
 import numpy as np
 import pickle
 import flasgger
 from flasgger import Swagger
 import warnings
-from fertilizer import fertilizer_dic
+# from fertilizer import fertilizer_dic
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -144,9 +144,16 @@ def fert_recommend():
     N = int(request.args.get('nitrogen'))
     P = int(request.args.get('phosphorous'))
     K = int(request.args.get('pottasium'))
+    # N = (request.args.get('nitrogen'))
+    # P = (request.args.get('phosphorous'))
+    # K = (request.args.get('pottasium'))
     # ph = int(request.args.get('ph'))
 
     df = pd.read_csv('fertilizer.csv')
+    if not df['Crop'].isin([crop_name]).any():
+        print('The value doesnt exists in the column')
+
+        abort(400)
 
     nr = df[df['Crop'] == crop_name]['N'].iloc[0]
     pr = df[df['Crop'] == crop_name]['P'].iloc[0]
