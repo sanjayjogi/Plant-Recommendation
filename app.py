@@ -5,7 +5,7 @@ import pickle
 import flasgger
 from flasgger import Swagger
 import warnings
-# from fertilizer import fertilizer_dic
+
 from flask_cors import CORS
 
 app = Flask(__name__)
