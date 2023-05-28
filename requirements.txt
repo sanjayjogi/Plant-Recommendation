@@ -2,6 +2,6 @@ numpy
 pandas
 flask
 flasgger
-flask_cors
+# flask_cors
 scikit-learn
 sklearn
