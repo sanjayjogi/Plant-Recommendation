@@ -4,3 +4,4 @@ flask
 flasgger
 flask_cors
 scikit-learn
+sklearn
