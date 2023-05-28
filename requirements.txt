@@ -3,3 +3,4 @@ pandas
 flask
 flasgger
 flask_cors
+scikit-learn
