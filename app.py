@@ -6,11 +6,11 @@ import flasgger
 from flasgger import Swagger
 import warnings
 
-# from flask_cors import CORS
+from flask_cors import CORS
 
 app = Flask(__name__)
 Swagger(app)
-# CORS(app)
+CORS(app)
 
 dt_in = open('DecisionTree.pkl', 'rb')
 DecisionTree = pickle.load(dt_in)
